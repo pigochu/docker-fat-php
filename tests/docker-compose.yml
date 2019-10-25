@@ -1,0 +1,27 @@
+version: '2'
+services:
+
+  laravel:
+    image: pigochu/fat-php:7.3-centos7
+    container_name: fatphp-test-laravel
+    environment:
+      - ENABLE_PHP_EXTENSIONS=@laravel
+
+    volumes:
+      - ./scripts/laravel_requirements.sh:/root/laravel_requirements.sh
+    command: "/root/laravel_requirements.sh"
+    ports:
+      - "9800:9800"
+
+
+  yii2:
+    image: pigochu/fat-php:7.3-centos7
+    container_name: fatphp-test-yii2
+    environment:
+      - ENABLE_PHP_EXTENSIONS=@yii2
+
+    volumes:
+      - ./scripts/yii2_requirements.sh:/root/yii2_requirements.sh
+    command: "/root/yii2_requirements.sh"
+    ports:
+      - "9801:8000"
