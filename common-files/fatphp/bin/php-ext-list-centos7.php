@@ -1,12 +1,6 @@
-#!/usr/bin/php
 <?php
-
-
-// default disable extension
-$container_os = getenv("CONTAINER_OS");
-if($container_os === "centos7") {
-    $ini_path = "/etc/php.d";
-    $list = [
+return [
+        "apcu"          => "40-apcu.ini",
         "opcache"       => "10-opcache.ini" ,
         "xdebug"        => "15-xdebug.ini",
         "bcmath"        => "20-bcmath.ini",
@@ -19,10 +13,13 @@ if($container_os === "centos7") {
         "fileinfo"      => "20-fileinfo.ini",
         "ftp"           => "20-ftp.ini",
         "iconv"         => "20-iconv.ini",
+        "inotify"       => "40-inotify.ini",
         "imagick"       => "40-imagick.ini",
+        "ldap"          => "20-ldap.ini",
         "mongodb"       => "50-mongodb.ini", 
         "mysqli"        => "30-mysqli.ini",
         "mysqlnd"       => "20-mysqlnd.ini",
+        "odbc"          => "20-odbc.ini",
         "oci8"          => "20-oci8.ini",
         "pdo"           => "20-pdo.ini",
         "pdo_sqlite"    => ["20-pdo.ini" , "30-pdo_sqlite.ini"],
@@ -33,34 +30,53 @@ if($container_os === "centos7") {
         "pgsql"         => "20-pgsql.ini",
         "phpiredis"     => "40-phpiredis.ini",
         "protobuf"      => "40-protobuf.ini",
+        "rar"           => "40-rar.ini",
+        "shmop"         => "20-shmop.ini",
+        "simplexml"     => "20-simplexml.ini",
         "snmp"          => "20-snmp.ini",
+        "soap"          => "20-soap.ini",
         "sqlite3"       => "20-sqlite3.ini",
+        "ssh2"          => "40-ssh2.ini",
         "swoole"        => "40-swoole.ini",
+        "sysvmsg"       => "20-sysvmsg.ini",
+        "sysvsem"       => "20-sysvsem.ini",
+        "sysvshm"       => "20-sysvshm.ini",
         "tidy"          => "20-tidy.ini",
         "tokenizer"     => "20-tokenizer.ini",
         "wddx"          => ["20-xml.ini" , "30-wddx.ini"],
         "xml"           => "20-xml.ini",
+        "xmlreader"     => "30-xmlreader.ini",
+        "xmlwriter"     => "20-xmlwriter.ini",
         "xsl"           => "20-xsl.ini",
         "zip"           => "40-zip.ini",
 
 
         "@laravel"      => [
             "20-bz2.ini",
+            "20-iconv.ini",
+            "20-intl.ini",
             "20-xml.ini",
             "20-tokenizer.ini",
+            "20-xmlwriter.ini",
+            "30-xmlreader.ini",
             "40-zip.ini",
         ],
 
         "@laravel-mysql" => [
             "20-bz2.ini",
+            "20-iconv.ini",
+            "20-intl.ini",
             "20-xml.ini",
             "20-tokenizer.ini",
+            "20-xmlwriter.ini",
+            "30-xmlreader.ini",
             "40-zip.ini",
             "20-pdo.ini" ,"30-pdo_mysql.ini",
         ],
 
         "@yii2"         => [
             "20-bcmath.ini",
+            "20-iconv.ini",
             "20-intl.ini",
             "20-gd.ini",
             "20-tokenizer.ini",
@@ -68,75 +84,11 @@ if($container_os === "centos7") {
 
         "@yii2-mysql"   => [
             "20-bcmath.ini",
+            "20-iconv.ini",
             "20-intl.ini",
             "20-gd.ini",
             "20-tokenizer.ini",
             "20-pdo.ini" ,"30-pdo_mysql.ini",
-        ],
-
-        "@phpmyadmin"   => [
-            "20-gd.ini",
-            "20-xml.ini",
-            "30-mysqli.ini",
-        ],
+        ]
 
     ];
-} else {
-    echo "Os not support." .PHP_EOL;
-    exit(2);
-}
-
-function usage() {
-    echo "Usage: php-ext-config init|enable" . PHP_EOL;
-    exit(1);
-}
-
-if(!isset($_SERVER['argv'][1])) {
-    usage();
-}
-
-$argv = $_SERVER['argv'];
-
-if($argv[1] === "docker-build") {
-    // disable extensions when build image  , move .ini to .disable
-    foreach($list as $ext => $files) {
-
-        if(is_string($files)) {
-            $files = [$files];
-        }
-
-        foreach($files as $file) {
-            if(!file_exists("{$ini_path}/{$file}.disable")) {
-                rename("{$ini_path}/{$file}" ,  "{$ini_path}/{$file}.disable");
-            }
-        }
-
-    }
-} else if($argv[1] === "init") {
-
-    $env = getenv('ENABLE_PHP_EXTENSIONS');
-    if(false === $env) {
-        $env = [];
-    }
-    $enable_exts = explode("," , $env);
-    foreach($enable_exts as $ext) {
-        $ext = trim($ext);
-
-        if(isset($list[$ext])) {
-            if(is_string($list[$ext])) {
-                $files = [$list[$ext]];
-            } else {
-                $files = $list[$ext];
-            }
-
-            foreach($files as $file) {
-                if(!file_exists("{$ini_path}/{$file}")) {
-                    copy("{$ini_path}/{$file}.disable"  , "{$ini_path}/{$file}");
-                }
-            }
-
-        }
-    }
-} else {
-    usage();
-}

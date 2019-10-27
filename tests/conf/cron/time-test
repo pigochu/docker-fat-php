@@ -1,0 +1,4 @@
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+* * * * * www-data echo `date "+\%H:\%M:\%S"` > /var/www/html/time.html
+#empty line

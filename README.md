@@ -1,97 +1,86 @@
 # Docker Fat-PHP #
 
-Fat-PHP is a project for PHP developers that contains most of the commonly used development tools, so the image size is very large .
+Fat-PHP is a docker image for PHP developers that contains most of the commonly used development tools, so the image size is very large .
 
 ## Support Tags ##
 
-- 7.3-centos7 : php 7.3 on CentOS 7
+- 7.3-centos7 : php 7.3 on CentOS 7 , CMD is "php -i"
+- 7.3-cli-centos7 : The same as 7.3-centos7
+- 7.3-apache-centos7 : build from 7.3-centos7 , CMD is "httpd-foreground" , mod_php is enabled.
+- 7.3-fpm-centos7 : build from  7.3-centos7 , CMD is "php-fpm"
+- 7.3-nginx-centos7 : build from  7.3-centos7 , CMD is "nginx-forgeround"
+
+apache / fpm / nginx is not a new image , it just extended 7.3-centos7 image , so you don't care download too large size images.
+
 
 ## Usage ##
 
 
 ### Example 1: php-cli list extensions and enable pdo_sqlite & xdebug ###
 
-    ~~~bash
-    docker run --rm --env "ENABLE_PHP_EXTENSIONS=pdo_sqlite,xdebug"  pigochu/fat-php:7.3-centos7 php -m
-    ~~~
+~~~bash
+docker run --rm --env "PHP_ENABLE_EXTENSIONS=pdo_sqlite,xdebug"  pigochu/fat-php:7.3-centos7 php -m
+~~~
 
 ### Example 2: php-fpm on background and enable yii2 support,apcu,imagick,zip and expose port 9000 ###
 
-    ~~~bash
-    docker run -d --env "ENABLE_PHP_EXTENSIONS=@yii2,apcu,imagick,zip" -p "9000:9000" pigochu/fat-php:7.3-centos7 php-fpm
-    ~~~
+~~~bash
+docker run -d --env "PHP_ENABLE_EXTENSIONS=@yii2,apcu,imagick,zip" -p "9000:9000" pigochu/fat-php:7.3-centos7 php-fpm
+~~~
+
+or use tag 7.3-fpm-centos7
+
+~~~bash
+docker run -d --env "ENABLE_PHP_EXTENSIONS=@yii2,apcu,imagick,zip" -p "9000:9000" pigochu/fat-php:7.3-fpm-centos7
+~~~
 
 ### Example 3: apache (mod_php with opcache enabled) and expose port 80 ###
 
-    ~~~bash
-    docker run -d --env "ENABLE_PHP_EXTENSIONS=opcache"  -p "80:80" pigochu/fat-php:7.3-centos7 httpd-foreground
-    ~~~
-
-### Example 4: docker-compose nginx + php-fpm + crontab ###
-
-1. Create a test project folder and index.php
-
-~~~text
-mkdir test
-cd test
-echo "<?php phpinfo(); " > index.php
+~~~bash
+docker run -d --env "PHP_ENABLE_EXTENSIONS=opcache"  -p "80:80" pigochu/fat-php:7.3-centos7 httpd-foreground
 ~~~
 
-2. Create a cron file , ex: echo time to /var/www/html/now.txt at every minute
-
-~~~
-* * * * * echo $(date +"%T") > /var/www/html/now.txt
-~~~
-
-3. Create docker-compose.yml in project root and content is:
-
-~~~yaml
-    Version: 3.5
-    services:
-        nginx:
-            image: pigochu/fat-php:7.3-centos7
-            container_name: test_nginx
-            volumes:
-                - www-data: /var/www/html
-            links:
-                - fpm
-        cron:
-            image: pigochu/fat-php:7.3-centos7
-            container_name: test_cron
-            links:
-                - fpm
-            volumes:
-                - ./cron-test /etc/cron.d/cron-test
-        fpm:
-            image: pigochu/fat-php:7.3-centos7
-            container_name: test_fpm
-            volumes:
-                - www-data: ./
-
-    volumes:
-        www-data:
-~~~
-
-
-
-3. Run command
+or use tag 7.3-apache-centos7
 
 ~~~bash
-docker-compose up -d
+docker run -d --env "PHP_ENABLE_EXTENSIONS=opcache"  -p "80:80" pigochu/fat-php:7.3-apache-centos7
 ~~~
+
+### Example 4: docker-compose nginx + php-fpm  ###
+
+Please check folder **tests** , in docker-compose.yml define nginx and phpfpm. You can run command:
+
+~~~bash
+cd tests
+docker-compose up nginx
+~~~
+
+After service started , open url http://localhost:8900 will show phpinfo.
+
+### Example 5: docker-compose crond ###
+
+Please check folder **tests** , in docker-compose.yml define cron service. You can run command:
+
+~~~bash
+cd tests
+docker-compose up cron
+~~~
+
+This example will write time to tests/html/time.html every minute.
 
 ## Included packages ##
 
 - apache with mod_php (run as user www-data)
 - nginx (run as user www-data)
-- cron
+- cronie
 - git
 - php-cli
 - php-fpm (run as user www-data)
-- mariadb client
-- pgsql client
+- mariadb(mysql) client
 - composer
 - nodejs & npm
+- net-tools
+- inotify-tools
 
 ## Included php extensions ##
 
@@ -101,29 +90,33 @@ Some extensions are disabled , if you want to enable , please set enviroment ENA
 ENABLE_PHP_EXTENSIONS="pdo_sqlite,xdebug"
 ~~~
 
-For framework or app minimum requirements , ex yii2 and pdo_mysql support , you can do this:
+For framework or app minimum requirements , ex yii2(with pdo_mysql extension) and xdebug support , you can do this:
 
 ~~~bash
-ENABLE_PHP_EXTENSIONS="@yii2,pdo_mysql"
+ENABLE_PHP_EXTENSIONS="@yii2-mysql,xdebug"
 ~~~
 
-Framework list :
+###### Currently supported framework:
 
 - @yii2: Yii framework 2 minimum requirements
 - @yii2-mysql: Yii framework 2 minimum requirements +  mysql support
 - @laravel : Laravel framework minimum requirements
 - @laravel-mysql : Laravel framework minimum requirements + mysql support
-- @phpmyadmin : phpmyadmin minimum requirements
 
-### Always enabled extensions ###
+### Always enable extensions ###
 
+- calendar
 - curl
 - ctype
+- dom
 - gettext
 - json
 - mbstring
 - openssl
+- pcntl
 - phar
+- posix
+- sockets
 
 ### Disabled extensions ###
 
@@ -152,22 +145,23 @@ Framework list :
 - protobuf
 - pgsql
 - phpiredis (redis client , laravel use it)
+- rar
+- ssh2
+- shmop
+- simplexml
 - snmp
+- soap
 - sqlite3
 - swoole4
+- sysvmsg
+- sysvsem
+- sysvshm
 - tokenizer
-- xdebug ( port is 9009 , because php-fpm's port is 9000 )
+- xdebug (port is 9009)
+- xmlreader
+- xmlwriter
 - xsl
 - zip
-
-## Build Image ##
-
-1. change workdir to project root
-2. Execute the following command
-
-~~~bash
-docker build -t pigochu/fat-php:7.3-centos7 build/7.3/centos7
-~~~
 
 ## Author ##
 
@@ -175,8 +169,6 @@ Pigo Chu <pigochu@gmail.com>
 
 ## Build Image ##
 
-In project root folder , run command:
-
-~~~bash
-docker build -t pigochu/fat-php:7.3-centos7 -f build/7.3/centos7/Dockerfile .
+~~~sh
+./build-7.3-centos7.sh
 ~~~

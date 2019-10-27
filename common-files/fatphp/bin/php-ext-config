@@ -1,0 +1,72 @@
+#!/usr/bin/php
+<?php
+
+$support_os_config = [
+    "centos7"   => [ "/etc/php.d" , "php-ext-list-centos7.php"],
+];
+// default disable extension
+$container_os = getenv("CONTAINER_OS");
+
+
+if( isset( $support_os_config[$container_os] )) {
+    $ini_path = $support_os_config[$container_os][0];
+    $list = include $support_os_config[$container_os][1];
+} else {
+    echo "Os not support." .PHP_EOL;
+    exit(2);
+}
+
+function usage() {
+    echo "Usage: php-ext-config init|enable" . PHP_EOL;
+    exit(1);
+}
+
+if(!isset($_SERVER['argv'][1])) {
+    usage();
+}
+
+$argv = $_SERVER['argv'];
+
+if($argv[1] === "docker-build") {
+    // disable extensions when build image  , move .ini to .disable
+    foreach($list as $ext => $files) {
+
+        if(is_string($files)) {
+            $files = [$files];
+        }
+
+        foreach($files as $file) {
+            if(!file_exists("{$ini_path}/{$file}.disable")) {
+                rename("{$ini_path}/{$file}" ,  "{$ini_path}/{$file}.disable");
+            }
+        }
+
+    }
+} else if($argv[1] === "init") {
+
+    $env = getenv('PHP_ENABLE_EXTENSIONS');
+    if(false === $env) {
+        $env = [];
+    }
+    $enable_exts = explode("," , $env);
+    foreach($enable_exts as $ext) {
+        $ext = trim($ext);
+
+        if(isset($list[$ext])) {
+            if(is_string($list[$ext])) {
+                $files = [$list[$ext]];
+            } else {
+                $files = $list[$ext];
+            }
+
+            foreach($files as $file) {
+                if(!file_exists("{$ini_path}/{$file}")) {
+                    copy("{$ini_path}/{$file}.disable"  , "{$ini_path}/{$file}");
+                }
+            }
+
+        }
+    }
+} else {
+    usage();
+}
