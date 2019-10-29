@@ -1,3 +1,12 @@
 #!/bin/sh
 set -e
-exec nginx -g "daemon off; user $RUN_USER;" "$@"
+
+# do template replace
+sourcefile="/opt/fatphp/templates/nginx.conf.template"
+targetfile="/etc/nginx/nginx.conf"
+if [ ! -f "$targetfile" ]
+then
+    envsubst "\$APP_ROOT \$RUN_USER" < $sourcefile > $targetfile
+    chmod 644 $targetfile
+fi
+exec nginx "$@"

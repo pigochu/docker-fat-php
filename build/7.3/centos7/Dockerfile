@@ -6,12 +6,13 @@ FROM centos:7
 # PHP_ENABLE_EXTENSIONS="mysqli,pdo_mysql,xdebug"
 ENV PHP_ENABLE_EXTENSIONS="" \
     PHP_FPM_LISTEN="0.0.0.0:9000" \
+    APP_ROOT="/var/www/html" \
     RUN_USER="www-data" \
     COMPOSER_ALLOW_SUPERUSER=1 \
     CONTAINER_OS=centos7
 
 
-WORKDIR /var/www/html
+WORKDIR $APP_ROOT
 
 
 
@@ -25,9 +26,11 @@ RUN yum upgrade -y && \
         php-cli \
         php-fpm \
         nginx \
+        nginx-mod-http-perl \
         composer \
         npm \
         git \
+        gettext \
         net-tools \
         inotify-tools \
         unzip \
@@ -78,6 +81,7 @@ RUN sed -i -e '/pam_loginuid.so/s/^/#/' /etc/pam.d/crond && \
     mkdir /run/php-fpm && \
     mkdir -p /root/.npm && \
     mkdir -p /root/.composer && \
+    rm /etc/nginx/nginx.conf && \
     rm /var/log/yum.log && \
     rm -rf /tmp/override && \
 # permissions
@@ -89,6 +93,7 @@ RUN sed -i -e '/pam_loginuid.so/s/^/#/' /etc/pam.d/crond && \
     chown -Rf $RUN_USER /var/run/httpd/* &&\
     chmod 755 /root/.npm && \
     chmod 755 /root/.composer && \
+    chmod 644 /opt/fatphp/templates/*.template && \
     PHP_INI_SCAN_DIR=/tmp /opt/fatphp/bin/php-ext-config docker-build
 
 
