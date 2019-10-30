@@ -4,12 +4,17 @@ FROM centos:7
 
 # some php extensions are disabled , if you want to enable , set PHP_ENABLE_EXTENSIONS like:
 # PHP_ENABLE_EXTENSIONS="mysqli,pdo_mysql,xdebug"
+
+# APP_ROOT : Your appication root
+# WWW_ROOT : Nginx or Apache Document root
 ENV PHP_ENABLE_EXTENSIONS="" \
     PHP_FPM_LISTEN="0.0.0.0:9000" \
     APP_ROOT="/var/www/html" \
+    WWW_ROOT="/var/www/html" \
     RUN_USER="www-data" \
     COMPOSER_ALLOW_SUPERUSER=1 \
     CONTAINER_OS=centos7
+ENV PATH=$APP_ROOT:$APP_ROOT/vendor/bin:/root/.composer/vendor/bin:$PATH
 
 
 WORKDIR $APP_ROOT

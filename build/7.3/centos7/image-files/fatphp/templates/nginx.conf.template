@@ -40,14 +40,14 @@ http {
         listen       80 default_server;
         listen       [::]:80 default_server;
         server_name  _;
-        root         ${APP_ROOT};
+        root         ${WWW_ROOT};
 
         # Load configuration files for the default server block.
         include /etc/nginx/default.d/*.conf;
         index index.php index.html;
 
         location ~* \.php$ {
-            root ${APP_ROOT};
+            root ${WWW_ROOT};
             fastcgi_pass phpfpm:9000;
             fastcgi_index index.php;
             fastcgi_split_path_info ^(.+\.php)(.*)$;
