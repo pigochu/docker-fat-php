@@ -60,6 +60,7 @@ return [
             "20-xmlwriter.ini",
             "30-xmlreader.ini",
             "40-zip.ini",
+            "20-fileinfo.ini",
         ],
 
         "@laravel-mysql" => [
@@ -71,6 +72,7 @@ return [
             "20-xmlwriter.ini",
             "30-xmlreader.ini",
             "40-zip.ini",
+            "20-fileinfo.ini",
             "20-pdo.ini" ,"30-pdo_mysql.ini","20-mysqlnd.ini",
         ],
 
