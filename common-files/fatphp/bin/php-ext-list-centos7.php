@@ -71,7 +71,7 @@ return [
             "20-xmlwriter.ini",
             "30-xmlreader.ini",
             "40-zip.ini",
-            "20-pdo.ini" ,"30-pdo_mysql.ini",
+            "20-pdo.ini" ,"30-pdo_mysql.ini","20-mysqlnd.ini",
         ],
 
         "@yii2"         => [
@@ -88,7 +88,7 @@ return [
             "20-intl.ini",
             "20-gd.ini",
             "20-tokenizer.ini",
-            "20-pdo.ini" ,"30-pdo_mysql.ini",
+            "20-pdo.ini" ,"30-pdo_mysql.ini","20-mysqlnd.ini",
         ]
 
     ];
