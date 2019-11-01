@@ -25,6 +25,7 @@ RUN yum upgrade -y && \
     yum install -y epel-release && \
 	rpm -Uvh https://rpms.remirepo.net/enterprise/remi-release-7.rpm && \
 	yum-config-manager --enable remi remi-php73 && \
+    curl -sL https://rpm.nodesource.com/setup_12.x | bash - && \
     yum install -y \
         apache \
         mod_php \
