@@ -21,7 +21,15 @@ WORKDIR $APP_ROOT
 
 
 
-RUN yum upgrade -y && \
+
+
+RUN echo $'[mariadb] \n\
+name = MariaDB \n\
+baseurl = http://yum.mariadb.org/10.4/centos7-amd64 \n\
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB \n\
+gpgcheck=1 \n\
+enabled=1' > /etc/yum.repos.d/MariaDB.repo && \
+    yum upgrade -y && \
     yum install -y epel-release && \
 	rpm -Uvh https://rpms.remirepo.net/enterprise/remi-release-7.rpm && \
 	yum-config-manager --enable remi remi-php73 && \
