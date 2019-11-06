@@ -42,7 +42,7 @@ enabled=1' > /etc/yum.repos.d/MariaDB.repo && \
         nginx \
         nginx-mod-http-perl \
         composer \
-        npm \
+        nodejs \
         git \
         gettext \
         net-tools \
