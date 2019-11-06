@@ -1,3 +1,14 @@
 #!/bin/sh
 set -e
+
+if [ -f /var/run/httpd/httpd.pid ]
+then
+    rm -f /var/run/httpd/httpd.pid
+fi
+
+if [ -f /var/run/httpd/authdigest_shm.1 ]
+then
+    rm -f /var/run/httpd/authdigest_shm.1
+fi
+
 exec httpd -DFOREGROUND "$@"
