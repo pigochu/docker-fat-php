@@ -111,6 +111,7 @@ ENABLE_PHP_EXTENSIONS="@yii2-mysql,xdebug"
 - dom
 - gettext
 - json
+- mcrypt (only for php 5.6)
 - mbstring
 - openssl
 - pcntl
@@ -133,6 +134,7 @@ ENABLE_PHP_EXTENSIONS="@yii2-mysql,xdebug"
 - intl
 - ldap
 - mongodb
+- mysql (only for php 5.6)
 - mysqli
 - mysqlnd
 - odbc
@@ -152,7 +154,7 @@ ENABLE_PHP_EXTENSIONS="@yii2-mysql,xdebug"
 - snmp
 - soap
 - sqlite3
-- swoole4
+- swoole (v2.0 for php5.6 , v4.0 for php7.3)
 - sysvmsg
 - sysvsem
 - sysvshm

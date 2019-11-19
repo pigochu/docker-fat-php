@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+# do template replace
+sourcefile="/opt/fatphp/templates/nginx.conf.template"
+targetfile="/etc/nginx/nginx.conf"
+if [ ! -f "$targetfile" ]
+then
+    envsubst "\$APP_ROOT \$WWW_ROOT \$RUN_USER" < $sourcefile > $targetfile
+    chmod 644 $targetfile
+fi
+exec nginx "$@"
