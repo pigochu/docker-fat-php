@@ -97,6 +97,7 @@ RUN sed -i -e '/pam_loginuid.so/s/^/#/' /etc/pam.d/crond && \
     mkdir -p /root/.composer && \
     rm /etc/nginx/nginx.conf && \
     rm /var/log/yum.log && \
+    rm -rf /tmp/fatphp && \
     rm -rf /tmp/override && \
 # permissions
     groupadd -g 1000 $RUN_USER && \
