@@ -93,6 +93,22 @@ return [
             "20-tokenizer.ini",
             "20-fileinfo.ini",
             "20-pdo.ini" ,"30-pdo_mysql.ini","20-mysqlnd.ini",
+        ],
+
+        '@magento2' => [
+            "20-bcmath.ini",
+            "20-iconv.ini",
+            "20-intl.ini",
+            "20-gd.ini",
+            "20-soap.ini",
+            "20-tokenizer.ini",
+            "20-fileinfo.ini",
+            "20-simplexml.ini",
+            "20-xml.ini",
+            "20-xmlwriter.ini",
+            "20-xsl.ini",
+            "40-zip.ini",
+            "20-pdo.ini" ,"30-pdo_mysql.ini","20-mysqlnd.ini",
         ]
 
     ];
