@@ -81,24 +81,21 @@ enabled=1' > /etc/yum.repos.d/MariaDB.repo && \
     yum clean all
 
 
-COPY ["build/7.3/centos7/image-files" ,  "common-files", "/tmp/"]
+COPY ["common-files", "/opt/"]
 
 
 RUN sed -i -e '/pam_loginuid.so/s/^/#/' /etc/pam.d/crond && \
 # create folder
     mkdir -p /opt/fatphp/bin && \
-    cp -Rf /tmp/fatphp/* /opt/fatphp && \
-    cp -Rf /tmp/override/etc/* /etc && \
+    cp -Rf /opt/override/etc/* /etc && \
     ln -s /opt/fatphp/bin/httpd-foreground /usr/local/bin/httpd-foreground && \
     ln -s /opt/fatphp/bin/nginx-foreground /usr/local/bin/nginx-foreground && \
     ln -s /opt/fatphp/bin/crond-foreground /usr/local/bin/crond-foreground && \
-    mkdir /run/php-fpm && \
     mkdir -p /root/.npm && \
     mkdir -p /root/.composer && \
     rm /etc/nginx/nginx.conf && \
     rm /var/log/yum.log && \
-    rm -rf /tmp/fatphp && \
-    rm -rf /tmp/override && \
+    rm -rf /opt/override && \
 # permissions
     groupadd -g 1000 $RUN_USER && \
     useradd -u 1000 -g $RUN_USER $RUN_USER && \
@@ -108,6 +105,7 @@ RUN sed -i -e '/pam_loginuid.so/s/^/#/' /etc/pam.d/crond && \
     chown -Rf $RUN_USER /var/run/httpd/* &&\
     chmod 755 /root/.npm && \
     chmod 755 /root/.composer && \
+    chmod 755 -Rf /opt/fatphp && \
     chmod 644 /opt/fatphp/templates/*.template && \
     PHP_INI_SCAN_DIR=/tmp /opt/fatphp/bin/php-ext-config docker-build
 
