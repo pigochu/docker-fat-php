@@ -32,7 +32,7 @@ enabled=1' > /etc/yum.repos.d/MariaDB.repo && \
     yum upgrade -y && \
     yum install -y epel-release && \
 	rpm -Uvh https://rpms.remirepo.net/enterprise/remi-release-7.rpm && \
-	yum-config-manager --enable remi remi-php73 && \
+	yum-config-manager --enable remi remi-php56 && \
     curl -sL https://rpm.nodesource.com/setup_12.x | bash - && \
     yum install -y \
         apache \
@@ -57,7 +57,9 @@ enabled=1' > /etc/yum.repos.d/MariaDB.repo && \
         php-intl \
         php-json \
         php-ldap \
+        php-mysqli \
         php-pgsql \
+        php-mcrypt \
         php-phpiredis \
         php-snmp \
         php-soap \
@@ -74,7 +76,7 @@ enabled=1' > /etc/yum.repos.d/MariaDB.repo && \
         php-pecl-rar \
         php-pecl-zip \
         php-pecl-ssh2 \
-        php-pecl-swoole4 \
+        php-pecl-swoole2 \
         php-pecl-imagick \
         php-pecl-protobuf \
         php-pecl-xdebug && \

@@ -2,7 +2,8 @@
 #   * Official English Documentation: http://nginx.org/en/docs/
 #   * Official Russian Documentation: http://nginx.org/ru/docs/
 
-#　user nginx;
+user ${RUN_USER};
+daemon off;
 worker_processes auto;
 error_log /proc/self/fd/2;
 pid /run/nginx.pid;
@@ -39,13 +40,20 @@ http {
         listen       80 default_server;
         listen       [::]:80 default_server;
         server_name  _;
-        root         /var/www/html;
+        root         ${WWW_ROOT};
 
         # Load configuration files for the default server block.
         include /etc/nginx/default.d/*.conf;
         index index.php index.html;
 
-
+        location ~* \.php$ {
+            root ${WWW_ROOT};
+            fastcgi_pass phpfpm:9000;
+            fastcgi_index index.php;
+            fastcgi_split_path_info ^(.+\.php)(.*)$;
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        }
 
         location = /nginx-logo.png {
             root /usr/share/nginx/html;

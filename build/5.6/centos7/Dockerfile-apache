@@ -1,0 +1,4 @@
+FROM pigochu/fat-php:5.6-centos7
+
+EXPOSE 80
+CMD ["httpd-foreground"]
