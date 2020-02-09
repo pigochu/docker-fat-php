@@ -37,6 +37,7 @@ enabled=1' > /etc/yum.repos.d/MariaDB.repo && \
     yum install -y \
         apache \
         mod_php \
+        mod_ssl \
         php-cli \
         php-fpm \
         nginx \

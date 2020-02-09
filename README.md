@@ -70,7 +70,7 @@ This example will write time to tests/html/time.html every minute.
 
 ## Included packages ##
 
-- apache with mod_php (run as user www-data)
+- apache with mod_php (run as user www-data) and mod_ssl
 - nginx (run as user www-data)
 - cronie
 - git

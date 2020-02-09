@@ -36,6 +36,7 @@ enabled=1' > /etc/yum.repos.d/MariaDB.repo && \
     curl -sL https://rpm.nodesource.com/setup_12.x | bash - && \
     yum install -y \
         apache \
+        mod_ssl \
         mod_php \
         php-cli \
         php-fpm \
