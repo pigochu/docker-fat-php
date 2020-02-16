@@ -78,7 +78,7 @@ This example will write time to tests/html/time.html every minute.
 - php-fpm (run as user www-data)
 - mariadb(mysql) client
 - composer
-- nodejs (v12.x LTS) & npm
+- nvm instal all latested LTS nodejs (8,10,12) & npm , and can swtich version via "NVM_USE_NODE_VERSION"
 - net-tools
 - inotify-tools
 
