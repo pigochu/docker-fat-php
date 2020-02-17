@@ -11,5 +11,6 @@ then
     echo "$PHP_ENABLE_EXTENSIONS" > /root/.fatphp-inited
     chmod 600 /root/.fatphp-inited
 fi
+runuser -l www-data -c "nvm alias default $NVM_USE_NODE_VERSION && nvm use default"
 
 exec "$@"

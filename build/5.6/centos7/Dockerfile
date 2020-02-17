@@ -12,6 +12,7 @@ ENV PHP_ENABLE_EXTENSIONS="" \
     APP_ROOT="/var/www/html" \
     WWW_ROOT="/var/www/html" \
     RUN_USER="www-data" \
+    NVM_USE_NODE_VERSION="lts/erbium" \
     COMPOSER_ALLOW_SUPERUSER=1 \
     CONTAINER_OS=centos7
 ENV PATH=$APP_ROOT:$APP_ROOT/vendor/bin:/root/.composer/vendor/bin:$PATH
@@ -23,7 +24,9 @@ WORKDIR $APP_ROOT
 
 
 
-RUN echo $'[mariadb] \n\
+RUN groupadd -g 1000 $RUN_USER && \
+    useradd -u 1000 -g $RUN_USER $RUN_USER && \
+    echo $'[mariadb] \n\
 name = MariaDB \n\
 baseurl = http://yum.mariadb.org/10.4/centos7-amd64 \n\
 gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB \n\
@@ -33,7 +36,6 @@ enabled=1' > /etc/yum.repos.d/MariaDB.repo && \
     yum install -y epel-release && \
 	rpm -Uvh https://rpms.remirepo.net/enterprise/remi-release-7.rpm && \
 	yum-config-manager --enable remi remi-php56 && \
-    curl -sL https://rpm.nodesource.com/setup_12.x | bash - && \
     yum install -y \
         apache \
         mod_ssl \
@@ -43,7 +45,6 @@ enabled=1' > /etc/yum.repos.d/MariaDB.repo && \
         nginx \
         nginx-mod-http-perl \
         composer \
-        nodejs \
         git \
         gettext \
         net-tools \
@@ -81,6 +82,12 @@ enabled=1' > /etc/yum.repos.d/MariaDB.repo && \
         php-pecl-imagick \
         php-pecl-protobuf \
         php-pecl-xdebug && \
+    runuser -l www-data -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.2/install.sh | bash && \
+    export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")" && \
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
+    nvm install lts/carbon && \
+    nvm install lts/dubnium && \
+    nvm install lts/erbium' && \
     yum clean all
 
 
@@ -100,8 +107,6 @@ RUN sed -i -e '/pam_loginuid.so/s/^/#/' /etc/pam.d/crond && \
     rm /var/log/yum.log && \
     rm -rf /opt/override && \
 # permissions
-    groupadd -g 1000 $RUN_USER && \
-    useradd -u 1000 -g $RUN_USER $RUN_USER && \
     chmod +x /opt/fatphp/bin/* && \
     chown -Rf root:$RUN_USER /var/lib/php && \
     chown $RUN_USER /var/run/httpd && \

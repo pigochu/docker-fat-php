@@ -83,6 +83,7 @@ return [
             "20-gd.ini",
             "20-tokenizer.ini",
             "20-fileinfo.ini",
+            "20-xml.ini",
         ],
 
         "@yii2-mysql"   => [
@@ -93,6 +94,7 @@ return [
             "20-tokenizer.ini",
             "20-fileinfo.ini",
             "20-pdo.ini" ,"30-pdo_mysql.ini","20-mysqlnd.ini",
+            "20-xml.ini",
         ],
 
         '@magento2' => [
