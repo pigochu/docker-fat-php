@@ -68,6 +68,15 @@ docker-compose up cron
 
 This example will write time to tests/html/time.html every minute.
 
+### Example 6: switch nodejs version ###
+
+This image use nvm to management node version , nvm install to /home/www-data/.nvm
+
+You can define envirement NVM_USE_NODE_VERSION , ex:
+- NVM_USE_NODE_VERSION=lts/* : use latest lts version
+- NVM_USE_NODE_VERSION=lts/erbium : use latest lts/12.x.x version
+
+
 ## Included packages ##
 
 - apache with mod_php (run as user www-data) and mod_ssl

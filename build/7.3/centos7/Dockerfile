@@ -81,12 +81,11 @@ enabled=1' > /etc/yum.repos.d/MariaDB.repo && \
         php-pecl-protobuf \
         php-pecl-wddx \
         php-pecl-xdebug && \
-    runuser -l www-data -c 'echo "lts/erbium" > /home/www-data/.nvmrc && \
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.2/install.sh | bash && \
+    runuser -l www-data -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.2/install.sh | bash && \
     export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")" && \
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
-    nvm install lts/carbon  && \
-    nvm install lts/dubnium  && \
+    nvm install lts/carbon && \
+    nvm install lts/dubnium && \
     nvm install lts/erbium' && \
     yum clean all
 
